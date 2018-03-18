@@ -87,8 +87,14 @@ min_frequency 表示 单词的频率如果小于3，则该单词就不会记录�
 """
 vocab_processor = learn.preprocessing.VocabularyProcessor(sentence_size, min_frequency=min_word_fred)
 # Have to fit transform to get length of unique words.
-temp_text = vocab_processor.transform(texts) # 这个生成了一个可迭代的元素
-sentence_line = [x for x in vocab_processor.transform(texts)] # 句子向量
+'''
+transform将文本转换为id向量
+'''
+# temp_text = vocab_processor.transform(texts) # 这个生成了一个可迭代的元素
+# for x in vocab_processor.transform(texts):
+#     continue
+vocab_processor.fit_transform(texts) # 这段代码就是用来生成字典的token：id
+sentence_line = [x for x in vocab_processor.transform(texts)] # 这段代码是用来生成句子的直方图向量
 embedding_size = len([x for x in vocab_processor.transform(texts)])
 vocabulary = vocab_processor.vocabulary_._mapping # 通过这段代码我们可以查看到生成的单词表
 
