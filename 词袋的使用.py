@@ -93,7 +93,10 @@ transform将文本转换为id向量
 # temp_text = vocab_processor.transform(texts) # 这个生成了一个可迭代的元素
 # for x in vocab_processor.transform(texts):
 #     continue
-vocab_processor.fit_transform(texts) # 这段代码就是用来生成字典的token：id
+'''
+注意这段带只是生成一个迭代器，但是经过这段代码后我们可以得到单词的标记号
+'''
+temp_result = vocab_processor.fit_transform(texts) #
 sentence_line = [x for x in vocab_processor.transform(texts)] # 这段代码是用来生成句子的直方图向量
 embedding_size = len([x for x in vocab_processor.transform(texts)])
 vocabulary = vocab_processor.vocabulary_._mapping # 通过这段代码我们可以查看到生成的单词表
@@ -111,6 +114,7 @@ target_test = np.array(target)[test_indices]
 # 声明词嵌入矩阵，将句子单词转成索引，再将索引转成one-hot向量，该向量为单位矩阵
 # 我们使用该矩阵为每个单词查找稀疏向量
 """
+  词嵌入矩阵的作用就是用来将一维词投影到一个二维的平面上面
   # 'diagonal' is [1, 2, 3, 4]
   tf.diag(diagonal) ==> [[1, 0, 0, 0]
                          [0, 2, 0, 0]
@@ -138,6 +142,9 @@ embeding为一个单位向量，x_data为输入值
 简单的讲就是根据x_data中的id，寻找embedding中的对应元素。
 比如，input_ids=[1,3,5]，则找出embedding中下标为1,3,5的向量组成一个矩阵返回。
 """
+'''
+有关embedding_lookup的方法在url:http://blog.csdn.net/u013041398/article/details/60955847
+'''
 x_embed = tf.nn.embedding_lookup(identity_mat, x_data)
 x_col_sums = tf.reduce_sum(x_embed, 0) # 等于句子的向量
 
@@ -166,6 +173,8 @@ for ix, t in enumerate(vocab_processor.fit_transform(texts_train)):
     sess.run(train_step, feed_dict={x_data : t, y_target : y_data})
     temp_loss = sess.run(loss, feed_dict={x_data : t, y_target : y_data})
     loss_vec.append(temp_loss)
+
+    embed = sess.run(x_embed, feed_dict={x_data : t, y_target : y_data})
 
     if (ix + 1) % 10 == 0:
         print('Training Observation #' + str(ix + 1) + ': Loss = ' + str(temp_loss))
