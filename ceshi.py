@@ -20,4 +20,12 @@ print(sess.run(B))
 vec = [1] * 5
 vec2 = [0] * 5
 vec3 = vec + vec2
+
+vec = tf.constant([[1, 2], [3, 4], [5, 6]])
+output = tf.reduce_sum(vec, axis=1)
+output2 = tf.reduce_sum(vec, axis=1, keep_dims=True)
+vec2 = tf.constant([2, 2, 2])
+vec2 = tf.expand_dims(vec2, 1)
+output3 = vec / vec2
+print(sess.run(output3))
 pass
