@@ -16,3 +16,8 @@ A = tf.ones(shape=4)
 print(sess.run(A))
 B = tf.diag(A)
 print(sess.run(B))
+
+vec = [1] * 5
+vec2 = [0] * 5
+vec3 = vec + vec2
+pass
