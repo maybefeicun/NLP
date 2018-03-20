@@ -177,6 +177,7 @@ for ix, t in enumerate(vocab_processor.fit_transform(texts_train)):
     embed = sess.run(x_embed, feed_dict={x_data : t, y_target : y_data})
 
     if (ix + 1) % 10 == 0:
+        # diag = sess.run(identity_mat, feed_dict={x_data : t, y_target : y_data})
         print('Training Observation #' + str(ix + 1) + ': Loss = ' + str(temp_loss))
 
     [[temp_pred]] = sess.run(prediction, feed_dict={x_data: t, y_target: y_data})
@@ -195,3 +196,8 @@ for xi, t in enumerate(vocab_processor.fit_transform(texts_test)):
     test_acc_all.append(test_acc_temp)
 
 print('Test Accuracy : {}'.format(np.mean(test_acc_all)))
+
+# word_vec = vocab_processor.fit_transform('like')
+# result = tf.nn.embedding_lookup(identity_mat, word_vec)
+# result1 = sess.run(result)
+# pass

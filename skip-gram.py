@@ -5,6 +5,11 @@
 # @File    : skip-gram.py
 # @Software: PyCharm
 
+'''
+本段代码主要要清楚词向量矩阵是如何得到的
+整个神经网络又是如何的
+'''
+
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
@@ -193,12 +198,13 @@ embed = tf.nn.embedding_lookup(embeddings, x_inputs)
 # 最后我们采用nce这种损失函数，将问题转变为一个二值问题，预测单词的分类以及随机噪音
 nce_weights = tf.Variable(tf.truncated_normal([vocabulary_size, embedding_size], stddev=1.0 / np.sqrt(embedding_size)))
 nce_biases = tf.Variable(tf.zeros([vocabulary_size]))
-loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weights, # 以后千万别不写weights=这些东西，这不是第一次出错了
-                                     biases=nce_biases,
-                                     labels=y_target,
-                                     inputs=embed,
-                                     num_sampled=num_sampled,
-                                     num_classes=vocabulary_size))
+# 以后千万别不写weights=这些东西，这不是第一次出错了
+loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weights, # weights.shape()=[vocab_size, embed_size]
+                                     biases=nce_biases, # biases.shape()=[vocab_size]
+                                     labels=y_target, # y_target.shape()=[batch_size]
+                                     inputs=embed, # embed.shape()=[batch_size, embed_size]
+                                     num_sampled=num_sampled, # 表示采样出多少个负样本，为什么为50我不是很清楚
+                                     num_classes=vocabulary_size)) # 分类结果数这个值一定和vocab_size一致
 
 # 创建函数寻找验证单词周围的单词。我们将计算验证单词集和所有词向量的余弦相似度，打印出每个验证单词最接近的单词
 '''
@@ -219,6 +225,7 @@ optimizer = tf.train.GradientDescentOptimizer(learning_rate=1.0)
 train_step = optimizer.minimize(loss)
 init = tf.initialize_all_variables()
 sess.run(init)
+# valid_data = sess.run(valid_dataset)
 
 loss_vec = []
 loss_x_vec = []
