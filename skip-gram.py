@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# coding=utf-8
 # @Time    : 2018/3/19 9:33
 # @Author  : chen
 # @File    : skip-gram.py
@@ -245,3 +246,10 @@ for i in range(generations):
                 close_word = word_dictionary_rev[nearest[k]]
                 log_str = "%s %s," % (log_str, close_word)
             print(log_str)
+
+# 自己的测试看看能否得到相应的词向量
+word_vec = word_dictionary['like']
+result = tf.nn.embedding_lookup(normalized_embeddings, word_vec)
+result1 = sess.run(result)
+reullt = tf.nn.embedding_lookup(embeddings, word_vec)
+result2 = sess.run(result)
